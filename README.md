@@ -37,12 +37,12 @@ This project involves:
 
 Everything is for Free!
 - **[Datasets](datasets/):** Access to the project dataset (csv files).
-- **[SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads):** Lightweight server for hosting your SQL database.
-- **[SQL Server Management Studio (SSMS)](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16):** GUI for managing and interacting with databases.
+- **[PostgreSQL]((https://www.postgresql.org/download/)):** Lightweight server for hosting your SQL database.
+- **[pgAdmin 4](https://www.pgadmin.org/download/pgadmin-4-windows/):** GUI for managing and interacting with databases.
 - **[Git Repository](https://github.com/):** Set up a GitHub account and repository to manage, version, and collaborate on your code efficiently.
-- **[DrawIO](https://www.drawio.com/):** Design data architecture, models, flows, and diagrams.
-- **[Notion](https://www.notion.com/templates/sql-data-warehouse-project):** Get the Project Template from Notion
-- **[Notion Project Steps](https://thankful-pangolin-2ca.notion.site/SQL-Data-Warehouse-Project-16ed041640ef80489667cfe2f380b269?pvs=4):** Access to All Project Phases and Tasks.
+- **[Figma jam](https://www.figma.com/figjam/):** Design data architecture, models, flows, and diagrams.
+- **[Notion](https://www.notion.so/Data-Warehouse-Project-1858110ee7d3809093bcfd2e94931877?pvs=4):** Get the Project Template from Notion
+
 
 ---
 
