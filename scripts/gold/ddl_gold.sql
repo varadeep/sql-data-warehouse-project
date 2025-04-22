@@ -1,0 +1,75 @@
+/*
+===============================================================================
+************************DDL Script: Create Gold Views**************************
+===============================================================================
+Script Purpose:
+    This script creates views for the Gold layer in the data warehouse. 
+    The Gold layer represents the final dimension and fact tables (Star Schema)
+
+    Each view performs transformations and combines data from the Silver layer 
+    to produce a clean, enriched, and business-ready dataset.
+
+Usage:
+    - These views can be queried directly for analytics and reporting.
+===============================================================================
+  */
+CREATE OR REPLACE VIEW GOLD.DIM_CUSTOMERS AS
+SELECT
+ROW_NUMBER() OVER ( ORDER BY CST_ID ) AS CUSTOMER_KEY,
+CI.CST_ID AS CUSTOMER_ID,
+CI.CST_KEY AS CUSTOMER_NUMBER,
+CI.CST_FIRSTNAME AS FIRST_NAME,
+CI.CST_LASTNAME AS LAST_NAME,
+LA.CNTRY AS COUNTRY,
+CI.CST_MARITAL_STATUS AS MARITIAL_STATUS,
+CASE
+WHEN CI.CST_GNDR != 'n/a' THEN CI.CST_GNDR
+ELSE COALESCE(CA.GEN, 'n/a')
+END AS GENDER,
+CA.BDATE AS DATE_OF_BIRTH,
+CI.CST_CREATE_DATE AS CREATE_DATE
+FROM
+SILVER.CRM_CUST_INFO AS CI
+LEFT JOIN SILVER.ERP_CUST_AZ12 CA ON CI.CST_KEY = CA.CID
+LEFT JOIN SILVER.ERP_LOC_A101 LA ON CA.CID = LA.CID
+
+
+CREATE OR REPLACE VIEW GOLD.DIM_PRODUCTS AS
+SELECT
+ROW_NUMBER() OVER (
+ORDER BY
+PR.PRD_START_DT,
+PR.PRD_ID
+) AS PRODUCT_KEY,
+PR.PRD_ID AS PRODUCT_ID,
+PR.PRD_KEY AS PRODUCT_NUMBER,
+PR.PRD_NM AS PRODUCT_NAME,
+PR.CAT_ID AS CATEGORY_ID,
+PX.CAT AS CATEGORY,
+PX.SUBCAT AS SUB_CATEGORY,
+PX.MAINTENANCE,
+PR.PRD_COST AS COST,
+PR.PRD_LINE AS PRODUCT_LINE,
+PR.PRD_START_DT AS START_DATE
+FROM
+SILVER.CRM_PRD_INFO PR
+LEFT JOIN SILVER.ERP_PX_CAT_G1V2 PX ON PR.CAT_ID = PX.ID
+WHERE
+PRD_END_DT IS NULL --Filter out historic Data
+
+
+CREATE OR REPLACE VIEW GOLD.FACT_SALES AS
+SELECT
+	SD.SLS_ORD_NUM AS ORDER_NUMBER,
+	PR.PRODUCT_KEY,
+	CU.CUSTOMER_KEY,
+	SD.SLS_ORDER_DT AS ORDER_DATE,
+	SD.SLS_SHIP_DT AS SHIPPING_DATE,
+	SD.SLS_DUE_DT AS DUE_DATE,
+	SD.SLS_SALES AS SALES_AMOUNT,
+	SD.SLS_QUANTITY AS QUANTITY,
+	SD.SLS_PRICE AS PRICE
+FROM
+	SILVER.CRM_SALES_DETAILS SD
+	LEFT JOIN GOLD.DIM_PRODUCTS PR ON SD.SLS_PRD_KEY = PR.PRODUCT_NUMBER
+	LEFT JOIN GOLD.DIM_CUSTOMERS CU ON SD.SLS_CUST_ID = CU.CUSTOMER_ID
