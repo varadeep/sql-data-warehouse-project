@@ -14,30 +14,31 @@ WARNING:
 */
 DO $$
 BEGIN
-    -- Check if the database exists
-    IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'DataWarehouse') THEN
+    IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'DWH') THEN
         RAISE NOTICE 'Database exists. Dropping it...';
 
-        -- Terminate active connections to the database
+        -- Terminate active connections
         PERFORM pg_terminate_backend(pg_stat_activity.pid)
         FROM pg_stat_activity
-        WHERE pg_stat_activity.datname = 'DataWarehouse'
+        WHERE pg_stat_activity.datname = 'DWH'
           AND pid <> pg_backend_pid();
 
-        -- Use dynamic SQL to drop the database
-        EXECUTE 'DROP DATABASE DataWarehouse';
-        RAISE NOTICE 'Database dropped.';
+        -- Cannot use DROP DATABASE in DO block; just raise notice
+        RAISE NOTICE 'Please run: DROP DATABASE DWH;';
     ELSE
         RAISE NOTICE 'Database does not exist.';
     END IF;
-
-    -- Create the database (outside the IF block, since it's always needed)
-    RAISE NOTICE 'Creating database...';
-    EXECUTE 'CREATE DATABASE DataWarehouse';
-    RAISE NOTICE 'Database created.';
-    EXECUTE 'CREATE SCHEMA bronze;'
-    EXECUTE 'CREATE SCHEMA silver;'
-    EXECUTE 'CREATE SCHEMA gold;'
-    RAISE NOTICE 'Bronze, Silver and Gold Schemas are  created.';
-
 END $$;
+--Droping database DWH
+DROP DATABASE DWH;
+--Creating database DataWarehouse
+CREATE DATABASE DWH;
+--Creating Bronze, Silver, and Gold
+DO $$
+BEGIN
+    EXECUTE 'CREATE SCHEMA bronze;';
+    EXECUTE 'CREATE SCHEMA silver;';
+    EXECUTE 'CREATE SCHEMA gold;';
+    RAISE NOTICE 'Bronze, Silver, and Gold schemas created.';
+END $$;
+
