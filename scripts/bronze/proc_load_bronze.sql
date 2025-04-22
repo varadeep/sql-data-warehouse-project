@@ -100,5 +100,5 @@ EXCEPTION WHEN OTHERS THEN
   RAISE NOTICE 'Total time taken (including error): %', end_time - start_time;
 END;
 $$;
-
+EXEC bronze.load bronze;
 CALL bronze.load_bronze()
