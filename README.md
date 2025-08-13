@@ -37,7 +37,7 @@ This project involves:
 
 Everything is for Free!
 - **[Datasets](datasets/):** Access to the project dataset (csv files).
-- **[PostgreSQL]([(https://www.postgresql.org/download/)](https://www.postgresql.org/download/)):** Lightweight server for hosting your SQL database.
+- **[PostgreSQL](https://www.postgresql.org/download/):** Lightweight server for hosting your SQL database.
 - **[pgAdmin 4](https://www.pgadmin.org/download/pgadmin-4-windows/):** GUI for managing and interacting with databases.
 - **[Git Repository](https://github.com/):** Set up a GitHub account and repository to manage, version, and collaborate on your code efficiently.
 - **[Figma jam](https://www.figma.com/figjam/):** Design data architecture, models, flows, and diagrams.
